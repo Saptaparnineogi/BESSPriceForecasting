@@ -36,7 +36,6 @@ The project follows an end-to-end workflow that mirrors a realistic battery trad
 | **4. Price Forecasting**        | Generated a full 48-settlement-period day-ahead price curve using only information available before the 10:00 AM auction gate closure (D-1).                                                         |
 | **5. BESS Dispatch Simulation** | Applied a rule-based battery dispatch strategy with state-of-charge (SoC) constraints to evaluate how forecasted prices could support charge/discharge decisions and energy arbitrage opportunities. |
 
-## Forecasting & Dispatch Pipeline
 
 ```mermaid
 flowchart LR
@@ -60,7 +59,7 @@ flowchart LR
 | **3. NESO**           | Day-Ahead Wind Forecast | Forecast wind generation in MW |
 
 ## Train/Test Split:
-A strict temporal split was used without no shuffling. The most recent 20% of data forms the test set, exactly replicating production conditions where the model is always trained on history and evaluated on the future.
+A strict temporal split was used without no shuffling. The most recent 20% of data form the test set, exactly replicating production conditions where the model is always trained on history and evaluated on the future.
 
 | Split                           | Date Range | What it provides |
 | ------------------------------- | ---------------------------------------- | --------------------------------------------|
@@ -112,7 +111,7 @@ Several forecasting approaches were evaluated to balance predictive performance,
 | Model | Captures Non-linearity | Models Feature Interactions | Assessment |
 |---------|:---------:|:---------:|---------|
 | Linear Regression | ❌ | ❌ | Strong baseline and highly interpretable, but unable to capture complex market dynamics and price spikes. |
-| Random Forest | ✅ | ✅ | Captures non-linear relationships but exhibited higher variance and less stable forecasts. |
+| Random Forest | ✅ | ✅ | Captures non-linear relationships but exhibits higher variance and less stable forecasts. |
 | XGBoost | ✅ | ✅ | Selected model. Delivered the best balance of forecasting accuracy, robustness, computational efficiency, and interpretability. |
 | LSTM / Neural Network | ✅ | ✅ | Considered but not pursued due to limited data volume and increased model complexity relative to expected performance gains. |
 
