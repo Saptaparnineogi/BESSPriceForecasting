@@ -49,3 +49,21 @@ flowchart LR
 
     E --> F["BESS Dispatch Simulation<br/>Charge/discharge logic<br/>SoC constraints<br/>Arbitrage revenue estimate"]
 ```
+## Data Sources
+| Source                           | Dataset | What it provides |
+| ------------------------------- | ---------------------------------------- | --------------------------------------------|
+| **1. Elexon BMRS**           | Market Index Price (MID) | Half-hourly wholesale prices — target variable |
+| **2. Elexon BMRS**      | National Demand Forecast (NDFD)| Forecast electricity demand in MW |
+| **3. NESO**           | Day-Ahead Wind Forecast | Forecast wind generation in MW |
+
+## Train/Test Split:
+A strict temporal split was used without no shuffling. The most recent 20% of data forms the test set, exactly replicating production conditions where the model is always trained on history and evaluated on the future.
+
+| Split                           | Date Range | What it provides |
+| ------------------------------- | ---------------------------------------- | --------------------------------------------|
+| **1. Training**           | 2023-01-15 to 2024-08-09 | 27,495 SPs |
+| **2. Test**      | 2024-08-09 to 2024-12-31 | 6,874 SPs |
+
+The near-identical train and test price means (£81.3 vs £80.5) confirm there is no regime shift between the two periods used for training and testing.
+
+## Model Used:
