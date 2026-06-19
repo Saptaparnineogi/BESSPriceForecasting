@@ -1,0 +1,7 @@
+{
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "python.defaultInterpreterPath": "C:\\Users\\olive\\Miniconda3\\envs\\myenv\\python.exe",
+    "python.condaPath": "C:\\Users\\olive\\Miniconda3\\Scripts\\conda.exe",
+    "python.terminal.activateEnvironment": true
+}

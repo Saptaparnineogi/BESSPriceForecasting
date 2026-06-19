@@ -1,0 +1,82 @@
+import pandas as pd
+import numpy as np
+import csv
+import requests
+from datetime import datetime, timedelta
+import glob
+import os
+from xgboost import XGBRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+import matplotlib.pyplot as plt
+from data_processing import get_price_data, process_mpi, get_demand_data, process_demand_data, process_wind_forecast
+from feature_engineering import add_diff_and_netdemand, add_lagged_features, add_seasonality
+
+
+def get_time_alignment(price_df):
+    full_range = pd.date_range(
+    start=price_df.timestamp.min(),
+    end=price_df.timestamp.max(),
+    freq="30min"
+    )
+    base_df = pd.DataFrame({'timestamp':full_range})
+    return base_df
+
+def load_data():
+    price_source = "https://data.elexon.co.uk/bmrs/api/v1/balancing/pricing/market-index"
+    price_df = get_price_data("2023-01-01", "2024-12-31", source_url=price_source)
+    processed_price_df = process_mpi(price_df)
+    demand_df = get_demand_data("data")
+    processed_demand_df = process_demand_data(demand_df)
+    wind_df = pd.read_csv(r"data\archive_1dayaheadwind.csv")
+    processed_wind_df = process_wind_forecast(wind_df)
+    base_df = get_time_alignment(processed_price_df)
+    df = base_df.merge(processed_price_df, on='timestamp', how='left')
+    df = df.merge(processed_demand_df, on="timestamp", how="left")
+    df = df.merge(processed_wind_df, on="timestamp", how="left")
+    return df
+
+def main():
+    df = load_data()
+    print("Data processing complete.....")
+    print("Dataframe shape:", df.shape)
+    df = add_seasonality(df)
+    df = add_lagged_features(df)
+    df = add_diff_and_netdemand(df)
+    features = [
+        'demand',
+        'wind_gen',
+        'solar_gen',
+        'net_demand',
+        'interconnector_flow',
+        'wind_forecast',
+        'hour',
+        'day_of_week',
+        'month',
+        'is_weekend',
+        'is_winter',
+        'hour_sin',
+        'hour_cos',
+        'dow_sin',
+        'dow_cos',
+        'month_sin',
+        'month_cos',
+        'price_lag_336',
+        'price_lag_672',
+        'price_roll_mean_48',
+        'price_roll_std_48',
+        'demand_roll_mean_48',
+        'wind_share',
+        'demand_change',
+        'wind_change',
+        'net_demand_change',
+        'net_demand_zscore',
+        'wind_zscore',
+        'tightness_x_demand'
+        ]
+
+    target = "price"
+    return None
+
+
+if __name__=="__main__":
+    main()
