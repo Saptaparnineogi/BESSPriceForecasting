@@ -1,4 +1,4 @@
-# Day ahead electricity Price Forecasting for GB
+# Day-ahead electricity Price Forecasting for GB
 ## Overview
 
 Battery Energy Storage Systems (BESS) can generate revenue by exploiting price differences in electricity markets through energy arbitrage. In the Great Britain (GB) wholesale electricity market, energy can be bought and sold in the day-ahead (DA) auction, where market participants submit bids and offers one day before delivery.
@@ -48,7 +48,9 @@ flowchart LR
     D --> E["Day-Ahead Price Forecast<br/>48 settlement periods<br/>Produced at 10:00 D-1"]
 
     E --> F["BESS Dispatch Simulation<br/>Charge/discharge logic<br/>SoC constraints<br/>Arbitrage revenue estimate"]
+
 ```
+
 ## Data Sources
 | Source                           | Dataset | What it provides |
 | ------------------------------- | ---------------------------------------- | --------------------------------------------|
@@ -66,4 +68,66 @@ A strict temporal split was used without no shuffling. The most recent 20% of da
 
 The near-identical train and test price means (£81.3 vs £80.5) confirm there is no regime shift between the two periods used for training and testing.
 
+## Feature Engineering:
+
+### Temporal Features
+Electricity prices have strong periodic patterns at hourly, daily, and monthly timescales. Raw integer encodings (e.g. hour 0-23) create artificial discontinuities; hour 23 and hour 0 are numerically far apart but represent consecutive periods. Cyclical encoding using sine and cosine transformations wraps time into a circle, making midnight adjacent to 23:30 as it should be.
+
+### Residual Demand Features:
+Residual demand is one of the most important ones, as in a merit-order electricity market, the marginal price equals the short-run marginal cost of the most expensive plant needed to clear demand. Wind has near-zero marginal cost, so when it generates, it displaces expensive thermal plants. Residual demand captures exactly how much expensive generation is needed.
+
+`net_demand = demand - wind_forecast`
+
+`wind_share = wind_forecast / demand`
+
+Note: Solar generation was not available in this dataset. Solar suppresses midday prices in summer months — without it, net demand is slightly overestimated in daylight hours, which is acknowledged as a limitation.
+
+### Lag and Rolling Features:
+
+Short price lags (1-4 SPs, i.e. 30-120 minutes) are not available at 10:00 D-1, as D-1 settlement prices are not yet finalised at auction close. Using them would constitute data leakage, the model would appear accurate in backtesting but fail in production.
+The safe lags are D-7 and D-14, which exploit strong weekly periodicity in electricity demand patterns.
+
+### System Tightness Proxies:
+LOLP (Loss of Load Probability) was not available in the used dataset. Two derived features approximate system tightness — the conditions under which price spikes occur:
+
+`net_demand_zscore = (net_demand - rolling_mean) / rolling_std`
+
+`wind_zscore = (wind_forecast - rolling_mean) / rolling_std`
+
+`tightness_x_demand = net_demand_zscore * net_demand`
+
+A high net_demand_zscore means the system is unusually stressed relative to recent history, capturing the non-linear spike risk that neither feature captures alone.
+
+
+
 ## Model Used:
+
+<b>XGBoost Regressor</b> was chosen over alternative approaches for the following reasons:
+
+## Model Selection
+
+Several forecasting approaches were evaluated to balance predictive performance, interpretability, and suitability for electricity price forecasting.
+
+| Model | Captures Non-linearity | Models Feature Interactions | Assessment |
+|---------|:---------:|:---------:|---------|
+| Linear Regression | ❌ | ❌ | Strong baseline and highly interpretable, but unable to capture complex market dynamics and price spikes. |
+| Random Forest | ✅ | ✅ | Captures non-linear relationships but exhibited higher variance and less stable forecasts. |
+| XGBoost | ✅ | ✅ | Selected model. Delivered the best balance of forecasting accuracy, robustness, computational efficiency, and interpretability. |
+| LSTM / Neural Network | ✅ | ✅ | Considered but not pursued due to limited data volume and increased model complexity relative to expected performance gains. |
+
+
+### Why XGBoost?
+
+Electricity prices are driven by complex interactions between demand, renewable generation, temporal effects, and historical market behaviour. XGBoost effectively captures these non-linear relationships while remaining computationally efficient and interpretable through feature importance analysis, making it a strong choice for day-ahead price forecasting.
+
+### Model Evaluation:
+
+#### Baseline Comparison:
+Model performance is only meaningful relative to naive baselines. Two baselines were computed on the test set:
+
+| Model                           | MAE (GBP/MWh) | vs Naive Lag |
+| ------------------------------- | ---------------------------------------- | --------------------------------------------|
+| **1. Naive D-7 lag (predict last week's price)**           | 28.79 | Baseline |
+| **2. Dummy mean predictor**      | 23.58 | -18% vs Naive|
+| **3. XGBoost**           | 14.98 | -47% vs Naive |
+
