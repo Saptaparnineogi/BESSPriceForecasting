@@ -1,5 +1,5 @@
 # Day-ahead electricity Price Forecasting for GB
-## Overview
+## Project Overview
 
 Battery Energy Storage Systems (BESS) can generate revenue by exploiting price differences in electricity markets through energy arbitrage. In the Great Britain (GB) wholesale electricity market, energy can be bought and sold in the day-ahead (DA) auction, where market participants submit bids and offers one day before delivery.
 
@@ -68,12 +68,12 @@ A strict temporal split was used without no shuffling. The most recent 20% of da
 
 The near-identical train and test price means (£81.3 vs £80.5) confirm there is no regime shift between the two periods used for training and testing.
 
-## Feature Engineering:
+## Feature Engineering
 
 ### Temporal Features
 Electricity prices have strong periodic patterns at hourly, daily, and monthly timescales. Raw integer encodings (e.g. hour 0-23) create artificial discontinuities; hour 23 and hour 0 are numerically far apart but represent consecutive periods. Cyclical encoding using sine and cosine transformations wraps time into a circle, making midnight adjacent to 23:30 as it should be.
 
-### Residual Demand Features:
+### Residual Demand Features
 Residual demand is one of the most important ones, as in a merit-order electricity market, the marginal price equals the short-run marginal cost of the most expensive plant needed to clear demand. Wind has near-zero marginal cost, so when it generates, it displaces expensive thermal plants. Residual demand captures exactly how much expensive generation is needed.
 
 `net_demand = demand - wind_forecast`
@@ -82,12 +82,12 @@ Residual demand is one of the most important ones, as in a merit-order electrici
 
 Note: Solar generation was not available in this dataset. Solar suppresses midday prices in summer months — without it, net demand is slightly overestimated in daylight hours, which is acknowledged as a limitation.
 
-### Lag and Rolling Features:
+### Lag and Rolling Features
 
 Short price lags (1-4 SPs, i.e. 30-120 minutes) are not available at 10:00 D-1, as D-1 settlement prices are not yet finalised at auction close. Using them would constitute data leakage, the model would appear accurate in backtesting but fail in production.
 The safe lags are D-7 and D-14, which exploit strong weekly periodicity in electricity demand patterns.
 
-### System Tightness Proxies:
+### System Tightness Proxies
 LOLP (Loss of Load Probability) was not available in the used dataset. Two derived features approximate system tightness — the conditions under which price spikes occur:
 
 `net_demand_zscore = (net_demand - rolling_mean) / rolling_std`
@@ -100,11 +100,9 @@ A high net_demand_zscore means the system is unusually stressed relative to rece
 
 
 
-## Model Used:
+## Model Selection
 
 <b>XGBoost Regressor</b> was chosen over alternative approaches for the following reasons:
-
-## Model Selection
 
 Several forecasting approaches were evaluated to balance predictive performance, interpretability, and suitability for electricity price forecasting.
 
@@ -120,9 +118,9 @@ Several forecasting approaches were evaluated to balance predictive performance,
 
 Electricity prices are driven by complex interactions between demand, renewable generation, temporal effects, and historical market behaviour. XGBoost effectively captures these non-linear relationships while remaining computationally efficient and interpretable through feature importance analysis, making it a strong choice for day-ahead price forecasting.
 
-### Model Evaluation:
+### Model Evaluation
 
-#### Baseline Comparison and Results:
+#### Baseline Comparison and Results
 Model performance is only meaningful relative to naive baselines. Two baselines were computed on the test set:
 
 | Model                           | MAE (GBP/MWh) | vs Naive Lag |
@@ -152,7 +150,7 @@ Model performance varies across different electricity price regimes. As expected
 - Negative prices and high-price spikes represent rare market regimes with limited historical examples.
 - Extreme price events (£200+/MWh) contribute disproportionately to forecast error and may require additional exogenous features such as outage information, fuel prices, or market fundamentals.
 
-## Day-ahead Forecasting:
+## Day-ahead Forecasting
 
 There is an important distinction between backtesting (evaluating historical test-set predictions) and day-ahead forecasting (producing tomorrow's price curve as it would work in production).
 
@@ -168,7 +166,7 @@ The forecast_day_ahead function simulates what happens at 10:00 on D-1. At this 
 
 The model produces 48 half-hourly price predictions for the full delivery day. This forecast vector is then passed to the BESS dispatch optimiser.
 
-### Forecast Performance:
+### Forecast Performance
 
 | Metric                           | Test Set | Day-Ahead Forecast |
 | ------------------------------- | ---------------------------------------- | --------------------------------------------|
