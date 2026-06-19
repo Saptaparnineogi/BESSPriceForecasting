@@ -151,3 +151,28 @@ Model performance varies across different electricity price regimes. As expected
 - Forecast accuracy degrades as prices become more extreme and less frequent.
 - Negative prices and high-price spikes represent rare market regimes with limited historical examples.
 - Extreme price events (£200+/MWh) contribute disproportionately to forecast error and may require additional exogenous features such as outage information, fuel prices, or market fundamentals.
+
+## Day-ahead Forecasting:
+
+There is an important distinction between backtesting (evaluating historical test-set predictions) and day-ahead forecasting (producing tomorrow's price curve as it would work in production).
+
+The forecast_day_ahead function simulates what happens at 10:00 on D-1. At this point the following information is available:
+
+- All historical prices up to end of D-2 (used for lag and rolling features)
+  
+- NESO national demand forecast for delivery day D (published D-2 rolling)
+  
+- NESO day-ahead wind forecast for D (published approximately 09:00 D-1)
+  
+- Derived features: net demand, wind share, seasonality indicators
+
+The model produces 48 half-hourly price predictions for the full delivery day. This forecast vector is then passed to the BESS dispatch optimiser.
+
+### Forecast Performance:
+
+| Metric                           | Test Set | Day-Ahead Forecast |
+| ------------------------------- | ---------------------------------------- | --------------------------------------------|
+| **1. MAE**           | GBP 15.12 / MWh | GBP 22.06 / MWh |
+| **2. RMSE**      | GBP 24.01 / MWh | Higher due to Spike Sensitivity |
+
+The forecast MAE is higher than the backtesting MAE because the single-day forecast is evaluated on one specific day rather than averaged across many days. The backtesting MAE of GBP15 reflects average performance — individual days will vary above and below this figure.
