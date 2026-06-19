@@ -36,6 +36,8 @@ The project follows an end-to-end workflow that mirrors a realistic battery trad
 | **4. Price Forecasting**        | Generated a full 48-settlement-period day-ahead price curve using only information available before the 10:00 AM auction gate closure (D-1).                                                         |
 | **5. BESS Dispatch Simulation** | Applied a rule-based battery dispatch strategy with state-of-charge (SoC) constraints to evaluate how forecasted prices could support charge/discharge decisions and energy arbitrage opportunities. |
 
+## Forecasting & Dispatch Pipeline
+
 ```mermaid
 flowchart LR
     A["Market & System Data<br/>Elexon MIP / APX<br/>NESO Demand Forecast<br/>Wind Generation Forecast"] 
@@ -48,7 +50,6 @@ flowchart LR
     D --> E["Day-Ahead Price Forecast<br/>48 settlement periods<br/>Produced at 10:00 D-1"]
 
     E --> F["BESS Dispatch Simulation<br/>Charge/discharge logic<br/>SoC constraints<br/>Arbitrage revenue estimate"]
-
 ```
 
 ## Data Sources
