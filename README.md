@@ -122,7 +122,7 @@ Electricity prices are driven by complex interactions between demand, renewable 
 
 ### Model Evaluation:
 
-#### Baseline Comparison:
+#### Baseline Comparison and Results:
 Model performance is only meaningful relative to naive baselines. Two baselines were computed on the test set:
 
 | Model                           | MAE (GBP/MWh) | vs Naive Lag |
@@ -131,3 +131,23 @@ Model performance is only meaningful relative to naive baselines. Two baselines 
 | **2. Dummy mean predictor**      | 23.58 | -18% vs Naive|
 | **3. XGBoost**           | 14.98 | -47% vs Naive |
 
+
+## Error analysis by Price Level
+
+Model performance varies across different electricity price regimes. As expected, forecast accuracy decreases during rare and highly volatile market conditions.
+
+| Price Range (GBP/MWh) | MAE (GBP/MWh) | Observations | Share of Test Set | Interpretation |
+|----------------------|---------------|-------------:|------------------:|----------------|
+| £50 – £100 | 11.26 | 4,337 | 63.0% | Core market conditions — strong forecasting performance |
+| £100 – £150 | 14.66 | 1,479 | 22.0% | Elevated prices — reasonable accuracy |
+| £0 – £50 | 25.27 | 789 | 11.0% | Low-demand / overnight periods — more challenging |
+| Negative Prices | 27.39 | 164 | 2.0% | Rare over-generation events |
+| £150 – £200 | 35.20 | 57 | 0.8% | Stress market conditions — tendency to underestimate prices |
+| £200+ | 145.97 | 48 | 0.7% | Extreme price spikes — difficult to predict with historical features alone |
+
+### Key Insights
+
+- The model performs best in normal market conditions (£50–£100/MWh), which account for nearly two-thirds of all observations.
+- Forecast accuracy degrades as prices become more extreme and less frequent.
+- Negative prices and high-price spikes represent rare market regimes with limited historical examples.
+- Extreme price events (£200+/MWh) contribute disproportionately to forecast error and may require additional exogenous features such as outage information, fuel prices, or market fundamentals.
