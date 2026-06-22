@@ -36,8 +36,8 @@ def load_data(price_data_url, demand_data_path, wind_data_path):
 
 def main():
     price_data_src = "https://data.elexon.co.uk/bmrs/api/v1/balancing/pricing/market-index"
-    demand_data_path = "data"
-    wind_data_path = r"data\archive_1dayaheadwind.csv"
+    demand_data_path = r"\Users\olive\Documents\workspace\BESSPriceForecasting\data"
+    wind_data_path = r"\Users\olive\Documents\workspace\BESSPriceForecasting\data\archive_1dayaheadwind.csv"
     df = load_data(price_data_src, demand_data_path, wind_data_path)
     print("Data processing complete.....")
     print("Dataframe shape:", df.shape)
@@ -77,6 +77,7 @@ def main():
         ]
 
     target = "price"
+    print(df.head())
     return None
 
 

@@ -42,7 +42,7 @@ def get_price_data(start_date, end_date, source_url):
             if "data" in data:
                 df = pd.json_normalize(data["data"]) #Normalize semi-structured JSON data into a flat table
                 all_price_data.append(df)
-            print(f"Downloaded {start.date()} to {end.date()}")
+            print(f"Downloaded price data: {start.date()} to {end.date()}")
         except Exception as e:
             print(f"Error for {start} to {end}: {e}")
     price_df = pd.concat(all_price_data, ignore_index=True)
@@ -54,7 +54,8 @@ def process_mpi(price_df):
     price_df["timestamp"] = (
         price_df["settlementDate"]
         + pd.to_timedelta((price_df["settlementPeriod"] - 1) * 30, unit="m")
-    ) # timestamp construction formula assumes 48 SPs, which is correct for the vast majority of days.
+    )
+    # timestamp construction formula assumes 48 SPs, which is correct for the vast majority of days.
     # SP numbering starts at 1 but the clock starts at 0, you subtract 1 to align them before multiplying.
     price_df = price_df.drop_duplicates(subset="timestamp")
     price_df = price_df.sort_values("timestamp")
@@ -84,6 +85,7 @@ def process_mpi(price_df):
     return price_df
 
 def get_demand_data(demand_folder_path):
+    print("Demand folder path:", demand_folder_path)
     pattern = os.path.join(demand_folder_path, "demanddata_*.csv")  # adjust pattern as needed
     file_list = glob.glob(pattern)
     demand_df = pd.concat((pd.read_csv(f) for f in file_list), ignore_index=True)
