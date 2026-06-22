@@ -21,13 +21,12 @@ def get_time_alignment(price_df):
     base_df = pd.DataFrame({'timestamp':full_range})
     return base_df
 
-def load_data():
-    price_source = "https://data.elexon.co.uk/bmrs/api/v1/balancing/pricing/market-index"
-    price_df = get_price_data("2023-01-01", "2024-12-31", source_url=price_source)
+def load_data(price_data_url, demand_data_path, wind_data_path):
+    price_df = get_price_data("2023-01-01", "2024-12-31", source_url=price_data_url)
     processed_price_df = process_mpi(price_df)
-    demand_df = get_demand_data("data")
+    demand_df = get_demand_data(demand_data_path)
     processed_demand_df = process_demand_data(demand_df)
-    wind_df = pd.read_csv(r"data\archive_1dayaheadwind.csv")
+    wind_df = pd.read_csv(wind_data_path)
     processed_wind_df = process_wind_forecast(wind_df)
     base_df = get_time_alignment(processed_price_df)
     df = base_df.merge(processed_price_df, on='timestamp', how='left')
@@ -36,7 +35,10 @@ def load_data():
     return df
 
 def main():
-    df = load_data()
+    price_data_src = "https://data.elexon.co.uk/bmrs/api/v1/balancing/pricing/market-index"
+    demand_data_path = "data"
+    wind_data_path = r"data\archive_1dayaheadwind.csv"
+    df = load_data(price_data_src, demand_data_path, wind_data_path)
     print("Data processing complete.....")
     print("Dataframe shape:", df.shape)
     df = add_seasonality(df)
