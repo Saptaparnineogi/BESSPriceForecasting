@@ -4,6 +4,8 @@ from data_processing import get_price_data, process_mpi, get_demand_data, proces
 from feature_engineering import add_diff_and_netdemand, add_lagged_features, add_seasonality
 from model import get_train_test_split, naive_baseline, train_xgb_model
 from evaluate import evaluate_lag_baseline, evaluate_model
+from predict import forecasting_DminusOne
+from visualization import plot_forecast_results
 
 
 def get_time_alignment(price_df):
@@ -86,7 +88,9 @@ def main():
     print("XGB Regressor")
     print("-----------------------------------")
     evaluate_model(xbgRegressor, test[features], test[target])
-
+    forecast_results = forecasting_DminusOne(xbgRegressor, test, features, target)
+    print("Forecasting complete.....")
+    plot_forecast_results(forecast_results)
 
 if __name__=="__main__":
     main()
