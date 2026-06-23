@@ -1,14 +1,10 @@
 import pandas as pd
-import numpy as np
-import csv
-import requests
-from datetime import datetime, timedelta
-import glob
-import os
 import matplotlib.pyplot as plt
 from data_processing import get_price_data, process_mpi, get_demand_data, process_demand_data, process_wind_forecast
 from feature_engineering import add_diff_and_netdemand, add_lagged_features, add_seasonality
-from model import get_train_test_split, naive_baseline, lag_baseline, train_xgb_model, evaluate_model
+from model import get_train_test_split, naive_baseline, train_xgb_model
+from evaluate import evaluate_lag_baseline, evaluate_model
+
 
 def get_time_alignment(price_df):
     full_range = pd.date_range(
@@ -75,13 +71,18 @@ def main():
         ]
 
     target = "price"
-    print(df.head())
     train, test = get_train_test_split(df, features)
+    dummyRegressor = naive_baseline(train, test, features)
     naive_baseline(train, test, features)
-    lag_baseline(test)
     xbgRegressor = train_xgb_model(train, test, features)
-    evaluate_model(xbgRegressor, test, features)
-    return None
+    print("Model training complete.....")
+    print("Evaluating models.....")
+    print("Naive Regressor .....")
+    evaluate_model(dummyRegressor, test[features], test[target])
+    print("Lag Baseline .....")
+    evaluate_lag_baseline(train, test, features)
+    print("XGB Regressor .....")
+    evaluate_model(xbgRegressor, test[features], test[target])
 
 
 if __name__=="__main__":

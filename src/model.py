@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.dummy import DummyRegressor
 from xgboost import XGBRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error
+
 
 
 def get_train_test_split(df, features, test_size=0.2):
@@ -24,18 +24,7 @@ def get_train_test_split(df, features, test_size=0.2):
 def naive_baseline(train, test, features):
     dummy = DummyRegressor(strategy='mean')
     dummy.fit(train[features], train['price'])
-    dummy_pred = dummy.predict(test[features])
-    print(f"Dummy mean MAE: {mean_absolute_error(test['price'], dummy_pred):.3f}")
-
-
-def lag_baseline(test):
-    # Naive lag baseline — predict D-7 same SP
-    lag_mae = mean_absolute_error(
-        test['price'].values, 
-        test['price_lag_336'].values
-    )
-    print(f"Naive lag-336 MAE: {lag_mae:.3f}")
-    
+    return dummy
 
 
 def train_xgb_model(train, test, features):
@@ -66,13 +55,6 @@ def train_xgb_model(train, test, features):
     print(f"Best iteration: {model.best_iteration}")
     return model
 
-def evaluate_model(model, test, features, target='price'):
-    X_test = test[features]
-    y_test = test[target]
-    y_pred = model.predict(X_test)
-    mae = mean_absolute_error(y_test, y_pred)
-    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-    print(f"XGB MAE: {mae:.3f}")
-    print(f"XGB RMSE: {rmse:.3f}")
+
 
 
