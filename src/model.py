@@ -35,6 +35,7 @@ def lag_baseline(test):
         test['price_lag_336'].values
     )
     print(f"Naive lag-336 MAE: {lag_mae:.3f}")
+    
 
 
 def train_xgb_model(train, test, features):
@@ -71,6 +72,7 @@ def evaluate_model(model, test, features, target='price'):
     y_pred = model.predict(X_test)
     mae = mean_absolute_error(y_test, y_pred)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-    return mae, rmse, y_test, y_pred
+    print(f"XGB MAE: {mae:.3f}")
+    print(f"XGB RMSE: {rmse:.3f}")
 
 

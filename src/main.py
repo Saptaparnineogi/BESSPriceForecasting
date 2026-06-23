@@ -5,12 +5,10 @@ import requests
 from datetime import datetime, timedelta
 import glob
 import os
-from xgboost import XGBRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error
 import matplotlib.pyplot as plt
 from data_processing import get_price_data, process_mpi, get_demand_data, process_demand_data, process_wind_forecast
 from feature_engineering import add_diff_and_netdemand, add_lagged_features, add_seasonality
-
+from model import get_train_test_split, naive_baseline, lag_baseline, train_xgb_model, evaluate_model
 
 def get_time_alignment(price_df):
     full_range = pd.date_range(
@@ -78,6 +76,11 @@ def main():
 
     target = "price"
     print(df.head())
+    train, test = get_train_test_split(df, features)
+    naive_baseline(train, test, features)
+    lag_baseline(test)
+    xbgRegressor = train_xgb_model(train, test, features)
+    evaluate_model(xbgRegressor, test, features)
     return None
 
 
