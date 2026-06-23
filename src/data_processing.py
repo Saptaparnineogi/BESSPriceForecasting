@@ -6,7 +6,13 @@ import os
 
 ### We are downloading data for the given period between start_date and end_date
 
-def get_price_data(start_date, end_date, source_url):
+def get_price_data(start_date, end_date, source_url, cache_file="price_data_cache.csv"):
+    # Check if cached file exists
+    if os.path.exists(cache_file):
+        print(f"Loading price data from cache: {cache_file}")
+        price_df = pd.read_csv(cache_file)
+        return price_df
+    
     start_date = pd.Timestamp(start_date)
     end_date = pd.Timestamp(end_date)
     
@@ -42,6 +48,8 @@ def get_price_data(start_date, end_date, source_url):
         except Exception as e:
             print(f"Error for {start} to {end}: {e}")
     price_df = pd.concat(all_price_data, ignore_index=True)
+    price_df.to_csv(cache_file, index=False)
+    print(f"Cached price data to: {cache_file}")
     return price_df
 
 def process_mpi(price_df):
