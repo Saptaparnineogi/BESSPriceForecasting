@@ -1,10 +1,6 @@
-from ast import pattern
-
 import pandas as pd
-import numpy as np
-import csv
 import requests
-from datetime import datetime, timedelta
+from datetime import timedelta
 import glob
 import os
 
