@@ -77,11 +77,14 @@ def main():
     xbgRegressor = train_xgb_model(train, test, features)
     print("Model training complete.....")
     print("Evaluating models.....")
-    print("Naive Regressor .....")
+    print("Naive Regressor")
+    print("-----------------------------------")
     evaluate_model(dummyRegressor, test[features], test[target])
-    print("Lag Baseline .....")
+    print("Lag Baseline")
+    print("-----------------------------------")
     evaluate_lag_baseline(train, test, features)
-    print("XGB Regressor .....")
+    print("XGB Regressor")
+    print("-----------------------------------")
     evaluate_model(xbgRegressor, test[features], test[target])
 
 
