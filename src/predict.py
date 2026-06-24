@@ -56,3 +56,23 @@ def forecast_day_ahead(model, df, features, forecast_date):
     
     return day_df[['timestamp', 'predicted_price', 'price',
                    'net_demand', 'wind_forecast', 'demand']].reset_index(drop=True)
+
+
+def forecast_multiple_days(model, df, features, start_date, end_date):
+    """
+    Rolls the forecast forward day by day.
+    """
+    dates   = pd.date_range(start=start_date, end=end_date, freq='D')
+    results = []
+    
+    for date in dates:
+        try:
+            day_forecast = forecast_day_ahead(model, df, features, date)
+            results.append(day_forecast)
+        except ValueError:
+            continue
+    
+    if not results:
+        raise ValueError("No forecasts generated — check date range")
+        
+    return pd.concat(results, ignore_index=True)
