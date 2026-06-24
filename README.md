@@ -1,4 +1,4 @@
-# Day-ahead electricity Price Forecasting for GB
+# GB Day-Ahead Electricity Price Forecasting for BESS Arbitrage
 ## Project Overview
 
 Battery Energy Storage Systems (BESS) can generate revenue by exploiting price differences in electricity markets through energy arbitrage. In the Great Britain (GB) wholesale electricity market, energy can be bought and sold in the day-ahead (DA) auction, where market participants submit bids and offers one day before delivery.
@@ -22,7 +22,7 @@ While this project focuses on price forecasting, the outputs can be integrated i
 
 ## Project Scope
 
-This repository describes a complete Python pipeline for forecasting GB day-ahead wholesale electricity prices for use in BESS (Battery Energy Storage System) arbitrage optimisation. The pipeline fetches data from Elexon and NESO, provide information about preprocessing and feature engineering, trains XGBoost algorithm for forecast, and outputs a 48-half-hour settlement period (SP) price forecast for the next delivery day.
+This repository describes a complete Python pipeline for forecasting GB day-ahead wholesale electricity prices for use in BESS (Battery Energy Storage System) arbitrage optimisation. The pipeline fetches data from Elexon and NESO, provides information about preprocessing and feature engineering, trains XGBoost algorithm for forecast, and outputs a 48-half-hour settlement period (SP) price forecast for the next delivery day.
 
 ## Repository Structure
 
@@ -195,3 +195,19 @@ The model produces 48 half-hourly price predictions for the full delivery day. T
 | **2. RMSE**      | GBP 24.01 / MWh | Higher due to Spike Sensitivity |
 
 The forecast MAE is higher than the backtesting MAE because the single-day forecast is evaluated on one specific day rather than averaged across many days. The backtesting MAE of GBP15 reflects average performance — individual days will vary above and below this figure.
+
+
+## How to Run
+
+```bash
+git clone https://github.com/Saptaparnineogi/BESSPriceForecasting.git
+cd BESSPriceForecasting
+
+python -m venv venv
+source venv/bin/activate  # Mac/Linux
+# venv\Scripts\activate   # Windows
+
+pip install -r requirements.txt
+python src/main.py
+```
+```
