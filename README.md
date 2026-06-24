@@ -44,6 +44,7 @@ BESSPriceForecasting/
 
 ```
 
+
 ## Forecasting and Dispatch Pipeline
 
 The project follows an end-to-end workflow that mirrors a realistic battery trading operation in the GB electricity market.
