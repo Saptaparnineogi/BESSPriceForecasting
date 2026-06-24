@@ -32,3 +32,27 @@ def forecasting_DminusOne(model, test, features, target):
     })
     
     return results_df
+
+
+def forecast_day_ahead(model, df, features, forecast_date):
+    """
+    Simulates what happens at 10:00 on D-1.
+    """
+    forecast_date = pd.Timestamp(forecast_date)
+    day_mask = df['timestamp'].dt.date == forecast_date.date()
+    day_df   = df[day_mask].copy()
+    
+    if len(day_df) == 0:
+        raise ValueError(f"No data found for {forecast_date.date()}")
+    if len(day_df) < 48:
+        print(f"Warning: only {len(day_df)} SPs found for {forecast_date.date()}, expected 48")
+    missing = day_df[features].isna().sum()
+    if missing.sum() > 0:
+        print("Warning: missing features:")
+        print(missing[missing > 0])
+    
+    # Produce the forecast
+    day_df['predicted_price'] = model.predict(day_df[features])
+    
+    return day_df[['timestamp', 'predicted_price', 'price',
+                   'net_demand', 'wind_forecast', 'demand']].reset_index(drop=True)
