@@ -24,6 +24,24 @@ While this project focuses on price forecasting, the outputs can be integrated i
 
 This repository describes a complete Python pipeline for forecasting GB day-ahead wholesale electricity prices for use in BESS (Battery Energy Storage System) arbitrage optimisation. The pipeline fetches data from Elexon and NESO, provide information about preprocessing and feature engineering, trains XGBoost algorithm for forecast, and outputs a 48-half-hour settlement period (SP) price forecast for the next delivery day.
 
+## Repository Structure
+
+```text
+BESSPriceForecasting/
+│
+├── data/                  # Raw and processed market/system data
+├── notebooks/             # Exploratory analysis and modelling notebooks
+├── src/                   # Modular Python pipeline
+│   ├── data_processing.py
+│   ├── feature_engineering.py
+│   ├── model.py
+│   ├── predict.py
+│   ├── evaluate.py
+│   └── visualization.py
+│
+├── requirements.txt
+└── README.md
+
 ## Forecasting and Dispatch Pipeline
 
 The project follows an end-to-end workflow that mirrors a realistic battery trading operation in the GB electricity market.
