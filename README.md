@@ -156,6 +156,12 @@ Model performance is only meaningful relative to naive baselines. Two baselines 
 ### Actual vs Predicted Prices
 ![Actual vs Predicted](figures/actual_vs_forecast_week.png)
 
+### Feature Importance
+![Feature Importance](figures/feature_importance.png)
+
+### Error by Price Regime
+![Error by Price Regime](figures/error_by_price_regime.png)
+
 ## Error analysis by Price Level
 
 Model performance varies across different electricity price regimes. As expected, forecast accuracy decreases during rare and highly volatile market conditions.
