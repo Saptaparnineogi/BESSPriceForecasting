@@ -9,6 +9,13 @@ This project develops a machine learning-based forecasting pipeline for GB day-a
 
 The resulting forecasts can serve as a foundation for future battery dispatch optimization and energy trading strategies.
 
+
+## Key Results
+
+- Forecasted 48 settlement periods ahead using only information available before the 10:00 D-1 auction.
+- Achieved an MAE of **14.99 £/MWh** on the held-out test set.
+- XGBoost Regrossor is used as a conscious choice for this task.
+
 ## Business Impact
 
 Reliable wholesale price forecasts are a key component of algorithmic energy trading and battery optimization platforms. By improving visibility into future market prices, forecasting models can support:
@@ -215,6 +222,18 @@ The model produces 48 half-hourly price predictions for the full delivery day. T
 
 The forecast MAE is higher than the backtesting MAE because the single-day forecast is evaluated on one specific day rather than averaged across many days. The backtesting MAE of GBP15 reflects average performance — individual days will vary above and below this figure.
 
+
+## Limitations
+
+- Extreme price spikes remain difficult to predict.
+- Forecast uncertainty is not explicitly modelled.
+- The dispatch strategy uses a rule-based heuristic rather than optimization.
+
+## Future Work
+
+- Quantile forecasting for uncertainty estimation.
+- Mixed Integer Linear Programming (MILP) for battery scheduling.
+- Incorporate weather uncertainty, fuel prices, and outage information.
 
 ## How to Run
 
