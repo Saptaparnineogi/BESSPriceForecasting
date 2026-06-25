@@ -151,6 +151,11 @@ Model performance is only meaningful relative to naive baselines. Two baselines 
 | **3. XGBoost**           | 14.98 | -47% vs Naive |
 
 
+### Key Visualization
+
+### Actual vs Predicted Prices
+![Actual vs Predicted](figures/actual_vs_predicted.png)
+
 ## Error analysis by Price Level
 
 Model performance varies across different electricity price regimes. As expected, forecast accuracy decreases during rare and highly volatile market conditions.
