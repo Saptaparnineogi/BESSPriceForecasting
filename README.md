@@ -120,7 +120,6 @@ LOLP (Loss of Load Probability) was not available in the used dataset. Two deriv
 A high net_demand_zscore means the system is unusually stressed relative to recent history, capturing the non-linear spike risk that neither feature captures alone.
 
 
-
 ## Model Selection
 
 <b>XGBoost Regressor</b> was chosen over alternative approaches for the following reasons:
@@ -139,9 +138,16 @@ Several forecasting approaches were evaluated to balance predictive performance,
 
 Electricity prices are driven by complex interactions between demand, renewable generation, temporal effects, and historical market behaviour. XGBoost effectively captures these non-linear relationships while remaining computationally efficient and interpretable through feature importance analysis, making it a strong choice for day-ahead price forecasting.
 
+![Feature Importance](figures/feature_importance.png)
+
+- Wind generation forecast and Historical electricity prices are the strongest predictors of future prices.
+- Residual demand provides additional predictive power.
+- Temporal features help capture recurring daily and weekly market patterns.
+
+
 ### Model Evaluation
 
-#### Baseline Comparison and Results
+#### Baseline Comparison and Results:
 Model performance is only meaningful relative to naive baselines. Two baselines were computed on the test set:
 
 | Model                           | MAE (GBP/MWh) | vs Naive Lag |
@@ -151,23 +157,9 @@ Model performance is only meaningful relative to naive baselines. Two baselines 
 | **3. XGBoost**           | 14.98 | -47% vs Naive |
 
 
-### Key Visualization
-#### Actual vs Predicted Price
 ![Actual vs Predicted](figures/actual_vs_predicted_scatter.png)
 
 - Prediction follows the actual price curve quite closely in normal market conditions, but in volatile market conditions, the prediction of price fails.
-
-#### Day Ahead Forecast for One Week
-![Actual vs Predicted](figures/actual_vs_forecast_week.png)
-- The model closely tracks the day-ahead price trend during normal market conditions.
-- Forecasts capture daily peaks and troughs, while slight underestimation is observed during rapid price spikes.
-
-#### Feature Importance
-![Feature Importance](figures/feature_importance.png)
-
-- Wind generation forecast and Historical electricity prices are the strongest predictors of future prices.
-- Residual demand provides additional predictive power.
-- Temporal features help capture recurring daily and weekly market patterns.
 
 
 ## Error analysis by Price Level
@@ -207,6 +199,12 @@ The forecast_day_ahead function simulates what happens at 10:00 on D-1. At this 
 - Derived features: net demand, wind share, seasonality indicators
 
 The model produces 48 half-hourly price predictions for the full delivery day. This forecast vector is then passed to the BESS dispatch optimiser.
+
+#### Day Ahead Forecast for One Week
+![Actual vs Predicted](figures/actual_vs_forecast_week.png)
+- The model closely tracks the day-ahead price trend during normal market conditions.
+- Forecasts capture daily peaks and troughs, while slight underestimation is observed during rapid price spikes.
+
 
 ### Forecast Performance
 
