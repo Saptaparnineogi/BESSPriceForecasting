@@ -152,8 +152,10 @@ Model performance is only meaningful relative to naive baselines. Two baselines 
 
 
 ### Key Visualization
+#### Actual vs Predicted Price
+![Actual vs Predicted](figures/actual_vs_predicted_scatter.png)
 
-### Actual vs Predicted Prices
+### Day Ahead Forecast for One Week
 ![Actual vs Predicted](figures/actual_vs_forecast_week.png)
 
 ### Feature Importance
