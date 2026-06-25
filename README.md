@@ -155,18 +155,26 @@ Model performance is only meaningful relative to naive baselines. Two baselines 
 #### Actual vs Predicted Price
 ![Actual vs Predicted](figures/actual_vs_predicted_scatter.png)
 
-### Day Ahead Forecast for One Week
-![Actual vs Predicted](figures/actual_vs_forecast_week.png)
+- Prediction follows the actual price curve quite closely in normal market conditions, but in volatile market conditions, the prediction of price fails.
 
-### Feature Importance
+#### Day Ahead Forecast for One Week
+![Actual vs Predicted](figures/actual_vs_forecast_week.png)
+- The model closely tracks the day-ahead price trend during normal market conditions.
+- Forecasts capture daily peaks and troughs, while slight underestimation is observed during rapid price spikes.
+
+#### Feature Importance
 ![Feature Importance](figures/feature_importance.png)
 
-### Error by Price Regime
-![Error by Price Regime](figures/error_by_price_regime.png)
+- Wind generation forecast and Historical electricity prices are the strongest predictors of future prices.
+- Residual demand provides additional predictive power.
+- Temporal features help capture recurring daily and weekly market patterns.
+
 
 ## Error analysis by Price Level
 
 Model performance varies across different electricity price regimes. As expected, forecast accuracy decreases during rare and highly volatile market conditions.
+
+![Error by Price Regime](figures/error_by_price_regime.png)
 
 | Price Range (GBP/MWh) | MAE (GBP/MWh) | Observations | Share of Test Set | Interpretation |
 |----------------------|---------------|-------------:|------------------:|----------------|
