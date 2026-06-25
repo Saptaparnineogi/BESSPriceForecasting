@@ -154,7 +154,7 @@ Model performance is only meaningful relative to naive baselines. Two baselines 
 ### Key Visualization
 
 ### Actual vs Predicted Prices
-![Actual vs Predicted](figures/actual_vs_predicted.png)
+![Actual vs Predicted](figures/actual_vs_forecast_week.png)
 
 ## Error analysis by Price Level
 
