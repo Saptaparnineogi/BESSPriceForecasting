@@ -90,3 +90,6 @@ htmlcov/
 # OS files
 Thumbs.db
 .DS_Store
+
+# HTML files
+.html
