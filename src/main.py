@@ -4,8 +4,8 @@ from feature_engineering import add_diff_and_netdemand, add_lagged_features, add
 from model import get_train_test_split, naive_baseline, train_xgb_model
 from evaluate import evaluate_lag_baseline, evaluate_model
 from predict import forecasting_DminusOne
-from visualization import plot_forecast_results
-from bessoptimizer import greedy_bess_dispatch, select_representative_day,plot_bess_dispatch
+from visualization import plot_bess_dispatch_dashboard, plot_forecast_results
+from bessoptimizer import greedy_bess_dispatch, select_representative_day
 
 
 def get_time_alignment(price_df):
@@ -91,7 +91,8 @@ def main():
     forecast_results = forecasting_DminusOne(xbgRegressor, test, features, target)
     print("Forecasting complete.....")
     plot_forecast_results(forecast_results)
-    day = select_representative_day(test, position=0.5)
+    print("Running dispatch optimization for representative day.....")
+    day = select_representative_day(forecast_results, position=0.5)
     dispatch_day = greedy_bess_dispatch(
         day,
         price_col="predicted_price",
@@ -99,12 +100,13 @@ def main():
         power_mw=50,
         eta=0.90
         )
-    plot_bess_dispatch(
+    fig = plot_bess_dispatch_dashboard(
     dispatch_day,
-    actual_price_col="price",
+    actual_price_col="actual_price",
     forecast_price_col="predicted_price",
-    save_path="figures/bess_dispatch_example.png",
-)
+    save_html="bess_dispatch_dashboard.html",
+    )
+    print("Dispatch optimization complete.....")
     
 
 if __name__=="__main__":
