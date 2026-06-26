@@ -251,9 +251,15 @@ Max SoC 95 MWh (95%) Prevents overcharge degradation; reserves headroom for freq
 | **Dispatch Algorithm** | Greedy rule-based scheduler used as a proof-of-concept for battery operation. |
 
 
-Revenue formula: Gross Revenue = sum[discharge SPs: energy x price] - sum[charge SPs: energy x price]
+The total arbitrage revenue is calculated as:
+```
+sum[discharge SPs: energy x price] - sum[charge SPs: energy x price]
+```
 
-Limitation: The greedy approach is not globally optimal. It makes charge/discharge decisions sequentially without looking ahead, potentially missing better opportunities. A production system would use Linear Programming (scipy.optimize.linprog) to jointly optimise all 48 decisions simultaneously - a 48-variable LP that solves in milliseconds and captures approximately 10-20% more revenue than the greedy approach.
+### Limitations and Future Improvements
+The implemented scheduler is intentionally simple and does not guarantee a globally optimal dispatch schedule. Decisions are made independently based on forecast-price rankings and do not consider the impact of future charging opportunities.
+
+A production-grade battery optimization system would formulate the dispatch problem as an optimization model (e.g., Mixed Integer Linear Programming or Linear Programming), allowing all 48 settlement periods to be optimized simultaneously while accounting for battery constraints, efficiency losses, and market dynamics. Such approaches typically achieve higher arbitrage revenue than a greedy heuristic.
 
 ## Limitations
 
