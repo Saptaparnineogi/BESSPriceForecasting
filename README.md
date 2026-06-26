@@ -1,4 +1,4 @@
-# GB Day-Ahead Electricity Price Forecasting for BESS Arbitrage
+# A forecasting pipeline that enables battery energy storage systems to optimize charge/discharge schedules and maximize arbitrage revenue in wholesale electricity markets.
 ## Project Overview
 
 Battery Energy Storage Systems (BESS) can generate revenue by exploiting price differences in electricity markets through energy arbitrage. In the Great Britain (GB) wholesale electricity market, energy can be bought and sold in the day-ahead (DA) auction, where market participants submit bids and offers one day before delivery.
