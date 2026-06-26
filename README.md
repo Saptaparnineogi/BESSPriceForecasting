@@ -256,6 +256,8 @@ The total arbitrage revenue is calculated as:
 sum[discharge SPs: energy x price] - sum[charge SPs: energy x price]
 ```
 
+![Actual vs Predicted](figures/bessdispatcher.png)
+
 ### Limitations and Future Improvements
 The implemented scheduler is intentionally simple and does not guarantee a globally optimal dispatch schedule. Decisions are made independently based on forecast-price rankings and do not consider the impact of future charging opportunities.
 
