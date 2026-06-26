@@ -1,11 +1,11 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 from data_processing import get_price_data, process_mpi, get_demand_data, process_demand_data, process_wind_forecast
 from feature_engineering import add_diff_and_netdemand, add_lagged_features, add_seasonality
 from model import get_train_test_split, naive_baseline, train_xgb_model
 from evaluate import evaluate_lag_baseline, evaluate_model
 from predict import forecasting_DminusOne
 from visualization import plot_forecast_results
+from bessoptimizer import greedy_bess_dispatch, select_representative_day,plot_bess_dispatch
 
 
 def get_time_alignment(price_df):
@@ -91,6 +91,21 @@ def main():
     forecast_results = forecasting_DminusOne(xbgRegressor, test, features, target)
     print("Forecasting complete.....")
     plot_forecast_results(forecast_results)
+    day = select_representative_day(test, position=0.5)
+    dispatch_day = greedy_bess_dispatch(
+        day,
+        price_col="predicted_price",
+        cap_mwh=100,
+        power_mw=50,
+        eta=0.90
+        )
+    plot_bess_dispatch(
+    dispatch_day,
+    actual_price_col="price",
+    forecast_price_col="predicted_price",
+    save_path="figures/bess_dispatch_example.png",
+)
+    
 
 if __name__=="__main__":
     main()
