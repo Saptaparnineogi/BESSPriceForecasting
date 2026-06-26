@@ -18,13 +18,28 @@ def plot_forecast_results(results_df):
     ax.set_ylabel('Price (£/MWh)')
     ax.legend()
     ax.grid(True, alpha=0.3)
-    plt.tight_layout()
-    plt.show()
+#     plt.tight_layout()
+#     plt.show()
 
+
+def add_horizontal_line(fig, df, y, row, col, name, dash="dash"):
+    fig.add_trace(
+        go.Scatter(
+            x=[df["timestamp"].min(), df["timestamp"].max()],
+            y=[y, y],
+            mode="lines",
+            name=name,
+            line=dict(dash=dash, width=1),
+            hoverinfo="skip",
+            showlegend=False,
+        ),
+        row=row,
+        col=col,
+    )
 
 def plot_bess_dispatch_dashboard(
     day: pd.DataFrame,
-    actual_price_col: str = "price",
+    actual_price_col: str = "actual_price",
     forecast_price_col: str = "predicted_price",
     action_col: str = "action",
     soc_col: str = "soc_mwh",
@@ -85,7 +100,7 @@ def plot_bess_dispatch_dashboard(
         rows=4,
         cols=2,
         shared_xaxes=True,
-        vertical_spacing=0.08,
+        vertical_spacing=0.17,
         horizontal_spacing=0.08,
         row_heights=[0.12, 0.38, 0.25, 0.25],
         specs=[
@@ -212,22 +227,22 @@ def plot_bess_dispatch_dashboard(
         col=1,
     )
 
-    fig.add_hline(
-        y=soc_max,
-        line_dash="dash",
-        annotation_text=f"Max SoC {soc_max:.0f} MWh",
-        annotation_position="top right",
+    add_horizontal_line(
+        fig,
+        df,
+        soc_max,
         row=3,
         col=1,
+        name=f"Max SoC {soc_max:.0f} MWh",
     )
 
-    fig.add_hline(
-        y=soc_min,
-        line_dash="dash",
-        annotation_text=f"Min SoC {soc_min:.0f} MWh",
-        annotation_position="bottom right",
+    add_horizontal_line(
+        fig,
+        df,
+        soc_min,
         row=3,
         col=1,
+        name=f"Min SoC {soc_min:.0f} MWh",
     )
 
     # Dispatch energy bars
@@ -242,12 +257,14 @@ def plot_bess_dispatch_dashboard(
         col=2,
     )
 
-    fig.add_hline(
-        y=0,
-        line_width=1,
+    add_horizontal_line(
+        fig,
+        df,
+        0,
         row=3,
         col=2,
-    )
+        name="Zero dispatch",
+)
 
     # Cumulative revenue
     fig.add_trace(
@@ -264,11 +281,13 @@ def plot_bess_dispatch_dashboard(
         col=1,
     )
 
-    fig.add_hline(
-        y=0,
-        line_dash="dash",
+    add_horizontal_line(
+        fig,
+        df,
+        0,
         row=4,
         col=1,
+        name="Zero revenue",
     )
 
     date_label = df["timestamp"].dt.date.iloc[0]
@@ -282,20 +301,549 @@ def plot_bess_dispatch_dashboard(
             ),
             x=0.5,
             xanchor="center",
+            y=0.98,
         ),
         template="plotly_white",
-        height=1050,
+        height=1150,
         width=1300,
         hovermode="x unified",
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=0.965,
+            y=0.91,
             xanchor="right",
             x=1,
         ),
-        margin=dict(t=130, l=70, r=40, b=60),
-    )
+        margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
+    fig.update_layout(
+    title=dict(
+        text=(
+            f"<b>BESS Dispatch Dashboard — {date_label}</b><br>"
+            f"<sup>{n_charge} charge periods | {n_discharge} discharge periods | "
+            f"Capacity {cap_mwh:.0f} MWh</sup>"
+        ),
+        x=0.5,
+        xanchor="center",
+        y=0.98,
+    ),
+    template="plotly_white",
+    height=1150,
+    width=1300,
+    hovermode="x unified",
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=0.91,
+        xanchor="right",
+        x=1,
+    ),
+    margin=dict(t=180, l=70, r=40, b=60),
+)
 
     fig.update_yaxes(title_text="Price (£/MWh)", row=2, col=1)
     fig.update_yaxes(title_text="SoC (MWh)", row=3, col=1, range=[0, cap_mwh * 1.05])
@@ -310,7 +858,4 @@ def plot_bess_dispatch_dashboard(
 
     if save_image:
         fig.write_image(save_image, scale=2)
-
-    fig.show()
-
     return fig
