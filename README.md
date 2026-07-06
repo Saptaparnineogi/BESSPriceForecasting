@@ -99,6 +99,14 @@ After removing invalid zero-price records, the electricity price distribution re
 
 Intraday Market Behaviour: Electricity prices exhibit a strong daily cycle, with lower prices overnight and pronounced morning and evening peaks driven by demand. This recurring pattern motivated the inclusion of temporal features such as settlement period and cyclical encodings.
 
+#### Key observations:
+
+- Most prices fall between £50–100/MWh.
+- Negative prices occur but are rare.
+- Clear morning and evening demand peaks are visible.
+- Strong daily seasonality justifies temporal feature engineering.
+- Extreme price spikes are infrequent but dominate forecast error.
+
 ## Train/Test Split:
 A strict temporal split was used without no shuffling. The most recent 20% of data form the test set, exactly replicating production conditions where the model is always trained on history and evaluated on the future.
 
