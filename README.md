@@ -66,19 +66,8 @@ The project follows an end-to-end workflow that mirrors a realistic battery trad
 | **5. BESS Dispatch Simulation** | Applied a rule-based battery dispatch strategy with state-of-charge (SoC) constraints to evaluate how forecasted prices could support charge/discharge decisions and energy arbitrage opportunities. |
 
 
-```mermaid
-flowchart LR
-    A["Market & System Data<br/>Elexon MIP / APX<br/>NESO Demand Forecast<br/>Wind Generation Forecast"] 
-    --> B["Data Processing<br/>Timestamp alignment<br/>Missing value handling<br/>Train/test preparation"]
+![workflow](figures/electricity_price_forecast.png)
 
-    B --> C["Feature Engineering<br/>Temporal features<br/>Residual demand<br/>Price lags<br/>Rolling statistics"]
-
-    C --> D["Model Training<br/>XGBoost Regressor<br/>Temporal train/test split<br/>Leakage-aware validation"]
-
-    D --> E["Day-Ahead Price Forecast<br/>48 settlement periods<br/>Produced at 10:00 D-1"]
-
-    E --> F["BESS Dispatch Simulation<br/>Charge/discharge logic<br/>SoC constraints<br/>Arbitrage revenue estimate"]
-```
 
 ## Data Sources
 | Source                           | Dataset | What it provides |
@@ -92,6 +81,20 @@ flowchart LR
 ![Price distribution](figures/mpi.png)
 
 After removing invalid zero-price records, the electricity price distribution remained positively skewed, with most prices concentrated between £50–100/MWh and a long right tail representing rare market stress events. These characteristics motivated regime-based model evaluation rather than relying solely on overall MAE.
+
+## Average Price by Settlement Period
+
+![Price distribution_by_settlement](figures/avgprice.png)
+
+Intraday Market Behaviour: Electricity prices exhibit a strong daily cycle, with lower prices overnight and pronounced morning and evening peaks driven by demand. This recurring pattern motivated the inclusion of temporal features such as settlement period and cyclical encodings.
+
+#### Key observations:
+
+- Most prices fall between £50–100/MWh.
+- Negative prices occur but are rare.
+- Clear morning and evening demand peaks are visible.
+- Strong daily seasonality justifies temporal feature engineering.
+- Extreme price spikes are infrequent but dominate forecast error.
 
 ## Train/Test Split:
 A strict temporal split was used without no shuffling. The most recent 20% of data form the test set, exactly replicating production conditions where the model is always trained on history and evaluated on the future.
