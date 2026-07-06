@@ -87,6 +87,10 @@ flowchart LR
 | **2. Elexon BMRS**      | National Demand Forecast (NDFD)| Forecast electricity demand in MW |
 | **3. NESO**           | Day-Ahead Wind Forecast | Forecast wind generation in MW |
 
+
+## Distribution of Electricity Prices
+![Price distribution](figures/mpi.png)
+
 ## Train/Test Split:
 A strict temporal split was used without no shuffling. The most recent 20% of data form the test set, exactly replicating production conditions where the model is always trained on history and evaluated on the future.
 
