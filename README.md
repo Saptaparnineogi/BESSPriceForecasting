@@ -66,19 +66,8 @@ The project follows an end-to-end workflow that mirrors a realistic battery trad
 | **5. BESS Dispatch Simulation** | Applied a rule-based battery dispatch strategy with state-of-charge (SoC) constraints to evaluate how forecasted prices could support charge/discharge decisions and energy arbitrage opportunities. |
 
 
-```mermaid
-flowchart LR
-    A["Market & System Data<br/>Elexon MIP / APX<br/>NESO Demand Forecast<br/>Wind Generation Forecast"] 
-    --> B["Data Processing<br/>Timestamp alignment<br/>Missing value handling<br/>Train/test preparation"]
+![workflow](figures/electricity_price_forecast.png)
 
-    B --> C["Feature Engineering<br/>Temporal features<br/>Residual demand<br/>Price lags<br/>Rolling statistics"]
-
-    C --> D["Model Training<br/>XGBoost Regressor<br/>Temporal train/test split<br/>Leakage-aware validation"]
-
-    D --> E["Day-Ahead Price Forecast<br/>48 settlement periods<br/>Produced at 10:00 D-1"]
-
-    E --> F["BESS Dispatch Simulation<br/>Charge/discharge logic<br/>SoC constraints<br/>Arbitrage revenue estimate"]
-```
 
 ## Data Sources
 | Source                           | Dataset | What it provides |
