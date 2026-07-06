@@ -91,6 +91,8 @@ flowchart LR
 ## Distribution of Electricity Prices
 ![Price distribution](figures/mpi.png)
 
+After removing invalid zero-price records, the electricity price distribution remained positively skewed, with most prices concentrated between £50–100/MWh and a long right tail representing rare market stress events. These characteristics motivated regime-based model evaluation rather than relying solely on overall MAE.
+
 ## Train/Test Split:
 A strict temporal split was used without no shuffling. The most recent 20% of data form the test set, exactly replicating production conditions where the model is always trained on history and evaluated on the future.
 
