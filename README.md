@@ -10,6 +10,8 @@ This project develops a machine learning-based forecasting pipeline for GB day-a
 The resulting forecasts can serve as a foundation for future battery dispatch optimization and energy trading strategies.
 
 
+![workflow](figures/electricity_price_forecast.png)
+
 ## Key Results
 
 - Forecasted 48 settlement periods ahead using only information available before the 10:00 D-1 auction.
@@ -66,7 +68,7 @@ The project follows an end-to-end workflow that mirrors a realistic battery trad
 | **5. BESS Dispatch Simulation** | Applied a rule-based battery dispatch strategy with state-of-charge (SoC) constraints to evaluate how forecasted prices could support charge/discharge decisions and energy arbitrage opportunities. |
 
 
-![workflow](figures/electricity_price_forecast.png)
+
 
 
 ## Data Sources
