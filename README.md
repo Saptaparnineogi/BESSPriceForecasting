@@ -1,4 +1,4 @@
-# A forecasting pipeline that enables battery energy storage systems to optimize charge/discharge schedules and maximize arbitrage revenue in wholesale electricity markets.
+# GB Day-Ahead Electricity Price Forecasting for BESS Arbitrage
 ## Project Overview
 
 Battery Energy Storage Systems (BESS) can generate revenue by exploiting price differences in electricity markets through energy arbitrage. In the Great Britain (GB) wholesale electricity market, energy can be bought and sold in the day-ahead (DA) auction, where market participants submit bids and offers one day before delivery.
@@ -16,7 +16,8 @@ The resulting forecasts can serve as a foundation for future battery dispatch op
 
 - Forecasted 48 settlement periods ahead using only information available before the 10:00 D-1 auction.
 - Achieved an MAE of **14.99 £/MWh** on the held-out test set.
-- XGBoost Regrossor is used as a conscious choice for this task.
+- XGBoost Regressor is selected deliberately for this task.
+- The forecasts are then passed into a BESS dispatch simulation to translate model outputs into operational charge/discharge decisions.
 
 ## Business Impact
 
@@ -31,7 +32,7 @@ While this project focuses on price forecasting, the outputs can be integrated i
 
 ## Project Scope
 
-This repository describes a complete Python pipeline for forecasting GB day-ahead wholesale electricity prices for use in BESS (Battery Energy Storage System) arbitrage optimisation. The pipeline fetches data from Elexon and NESO, provides information about preprocessing and feature engineering, trains XGBoost algorithm for forecast, and outputs a 48-half-hour settlement period (SP) price forecast for the next delivery day.
+This repository describes a complete Python pipeline for forecasting GB day-ahead wholesale electricity prices for use in BESS (Battery Energy Storage System) arbitrage optimisation. The pipeline fetches data from Elexon and NESO, provides information about preprocessing and feature engineering, trains an XGBoost model for forecasting, and outputs a 48-half-hour settlement period (SP) price forecast for the next delivery day.
 
 ## Repository Structure
 
@@ -99,7 +100,7 @@ Intraday Market Behaviour: Electricity prices exhibit a strong daily cycle, with
 - Extreme price spikes are infrequent but dominate forecast error.
 
 ## Train/Test Split:
-A strict temporal split was used without no shuffling. The most recent 20% of data form the test set, exactly replicating production conditions where the model is always trained on history and evaluated on the future.
+A strict temporal split was used without shuffling. The most recent 20% of data form the test set, exactly replicating production conditions where the model is always trained on history and evaluated on the future.
 
 | Split                           | Date Range | What it provides |
 | ------------------------------- | ---------------------------------------- | --------------------------------------------|
@@ -235,9 +236,6 @@ The model produces 48 half-hourly price predictions for the full delivery day. T
 The forecast MAE is higher than the backtesting MAE because the single-day forecast is evaluated on one specific day rather than averaged across many days. The backtesting MAE of GBP15 reflects average performance — individual days will vary above and below this figure.
 
 ## BESS Dispatch Simulation
-Battery Parameters Parameter Value Rationale Capacity 100 MWh Realistic utility-scale BESS size Power rating 50 MW Gives 2-hour duration (100 / 50) Round-trip efficiency 90% Standard Li-ion assumption Min SoC 10 MWh (10%) Protects cells from deep discharge degradation
-Max SoC 95 MWh (95%) Prevents overcharge degradation; reserves headroom for frequency response Energy per SP 25 MWh 50 MW x 0.5 hours — max flow per 30-min period
-
 ### Battery Configuration:
 
 | Parameter | Value | Description |
