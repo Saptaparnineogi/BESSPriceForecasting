@@ -1,4 +1,12 @@
 # GB Day-Ahead Electricity Price Forecasting for BESS Arbitrage
+
+![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
+![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-150458?logo=pandas)
+![XGBoost](https://img.shields.io/badge/XGBoost-Time%20Series-orange)
+![Scikit-Learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikitlearn)
+![Plotly](https://img.shields.io/badge/Plotly-Dashboard-3F4F75?logo=plotly)
+![License](https://img.shields.io/badge/License-MIT-green)
+
 ## Project Overview
 
 Battery Energy Storage Systems (BESS) can generate revenue by exploiting price differences in electricity markets through energy arbitrage. In the Great Britain (GB) wholesale electricity market, energy can be bought and sold in the day-ahead (DA) auction, where market participants submit bids and offers one day before delivery.
