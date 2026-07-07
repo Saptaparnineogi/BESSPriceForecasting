@@ -1,11 +1,11 @@
 # GB Day-Ahead Electricity Price Forecasting for BESS Arbitrage
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
-![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-150458?logo=pandas)
 ![XGBoost](https://img.shields.io/badge/XGBoost-Time%20Series-orange)
-![Scikit-Learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikitlearn)
 ![Plotly](https://img.shields.io/badge/Plotly-Dashboard-3F4F75?logo=plotly)
-![License](https://img.shields.io/badge/License-MIT-green)
+![Time Series](https://img.shields.io/badge/Time%20Series-Forecasting-blue)
+![Energy Markets](https://img.shields.io/badge/Energy-BESS-green)
+![MIT License](https://img.shields.io/badge/License-MIT-success)
 
 ## Project Overview
 
